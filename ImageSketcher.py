@@ -54,20 +54,25 @@ class Sketch(Resource):
     # Define POST request
     @staticmethod
     def post():
+        print("Received POST call")
         # Parse arguments
         args = parser.parse_args()
+        print("Arguments parsed")
         # Get conversion mode (defaults to sketched as per parser.add_argument(default=))
         # Catch conversion error for when someone passes in an invalid type
         try:
             mode = Mode[args["type"].upper()]
+            print("Mode: {}".format(mode.value))
         except KeyError as e:
             # Return HTTP 400 with message
             abort(400, message="Choose 'type' from 'grayscale', 'grayscale_inverted', 'sketched'.")
             return None
         # Read file as a stream
         file_stream = args["image"].read()
+        print("File received")
         # Sketch the image
         image = sketch_image(file_stream, mode)
+        print("Image sketched")
         # Return binary response with mimetype 'image/jpeg'
         return send_file(io.BytesIO(image), mimetype='image/jpeg')
 
