@@ -53,6 +53,8 @@ class Mode(Enum):
 class Sketch(Resource):
     # Define POST request
     @staticmethod
+    @app.post("/")
+    @app.post("/sketch")
     def post():
         print("Received POST call")
         # Parse arguments
@@ -77,14 +79,12 @@ class Sketch(Resource):
         return send_file(io.BytesIO(image), mimetype='image/jpeg')
 
     @staticmethod
+    @app.get("/")
+    @app.get("/sketch")
     def get():
         # Return 405 message to reject GET call
         abort(405, message="Please send image as POST request.")
         return
-
-
-# Accept data on / and /sketch
-api.add_resource(Sketch, '/', "/sketch")
 
 
 def sketch_image(image, mode):
@@ -137,4 +137,4 @@ def dodge(x, y):
 # Run app
 if __name__ == '__main__':
     # For dev environment
-    app.run("0.0.0.0")
+    app.run("0.0.0.0", 8080)
